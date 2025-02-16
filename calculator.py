@@ -1,11 +1,33 @@
 import tkinter as tk
 
 
+class CalculatorModel:
+    def __init__(self):
+        self.expression = ""
+
+    def add(self, value):
+        self.expression += str(value)
+        return self.expression
+
+    def clear(self):
+        self.expression = ""
+        return self.expression
+
+    def calculate(self):
+        try:
+            result = eval(self.expression)
+        except Exception:
+            result = "Помилка"
+        self.expression = str(result)
+        return self.expression
+
+
 class CalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Калькулятор")
         self.root.geometry("300x400")
+        self.model = CalculatorModel()
         self.create_widgets()
 
     def create_widgets(self):
@@ -47,6 +69,21 @@ class CalculatorApp:
             self.buttons_frame.rowconfigure(i, weight=1)
         for j in range(total_columns):
             self.buttons_frame.columnconfigure(j, weight=1)
+
+    def clear_entry(self):
+        new_expr = self.model.clear()
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, new_expr)
+
+    def add_to_expression(self, value):
+        new_expr = self.model.add(value)
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, new_expr)
+
+    def calculate(self):
+        result = self.model.calculate()
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, result)
 
 
 if __name__ == "__main__":
